@@ -7,7 +7,10 @@ class LRUCache:
     to every node stored in the cache.
     """
     def __init__(self, limit=10):
-        pass
+        self.limit = limit
+        self.storage = {}
+        self.ordering = DoublyLinkedList()
+        self.size = len(self.ordering)
 
     """
     Retrieves the value associated with the given key. Also
@@ -17,7 +20,14 @@ class LRUCache:
     key-value pair doesn't exist in the cache.
     """
     def get(self, key):
-        pass
+        # check to see if the key is in our cache
+        if key in self.storage:
+            # fetch dll node which is the value of this key
+            node = self.stoarge[key]
+            self.ordering.move_to_end(node)
+            return node.value[1],
+        else:
+            return None
 
     """
     Adds the given key-value pair to the cache. The newly-
@@ -30,4 +40,23 @@ class LRUCache:
     the newly-specified value.
     """
     def set(self, key, value):
-        pass
+        # check if the key is in the cache
+        if key in self.storage:
+            node = self.storage[key]
+            # overwrite the old value
+            ndoe.value = (key, value)
+            # move this node to the tail
+            self.ordering.move_to_end(node)
+            return
+        if self.size == self.limit:
+            # first evict the least recently used element
+            oldest_key = self.ordering.head.value[0]
+            del self.storage[oldest_key]
+            # remove the head node from the dll
+            self.ordering.remove_from_head()
+            self.size -= 1
+        # key is not in storage and we still have room
+        # add the key and value
+        seld.ordering.add_to_tail((key, value))
+        self.storage[key] = self.ordering.tail
+        self.size += 1
